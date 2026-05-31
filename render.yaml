@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: institut
+    env: docker
+    buildCommand: ""
+    startCommand: ""
