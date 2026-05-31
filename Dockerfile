@@ -15,6 +15,11 @@ RUN npm install && npm run build
 
 RUN cp .env.example .env && php artisan key:generate
 
-RUN chown -R www-data:www-data /var/www/html/storage
+RUN chown -R www-data:www-data /var/www/html/storage bootstrap/cache
+
+# Pointer Apache vers le dossier public de Laravel
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -i 's|/var/www/html|${APACHE_DOCUMENT_ROOT}|g' /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
 
 EXPOSE 80
