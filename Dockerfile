@@ -13,8 +13,6 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
-RUN cp .env.example .env && php artisan key:generate
-
 RUN chown -R www-data:www-data /var/www/html/storage bootstrap/cache
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
