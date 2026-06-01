@@ -19,4 +19,8 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -i 's|/var/www/html|${APACHE_DOCUMENT_ROOT}|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 EXPOSE 80
+CMD ["/start.sh"]
