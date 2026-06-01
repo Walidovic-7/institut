@@ -13,11 +13,18 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run build
 
-RUN chown -R www-data:www-data /var/www/html/storage bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage bootstrap/cache /var/www/html/public
 
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -i 's|/var/www/html|${APACHE_DOCUMENT_ROOT}|g' /etc/apache2/sites-available/000-default.conf
+RUN echo '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
 RUN a2enmod rewrite
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
